@@ -5,13 +5,11 @@ class HomeController < ApplicationController
     render :action => 'welcome'
   end
 
-  def welcome
-    behavior_cache Page, :tag => (params[:page] || 1) do
+  def welcome    
       @news = Page.
         paginate(:page => params[:page], :per_page => 5,
                  :conditions=>["category = ?", 'news'],
-                 :order => "created_at desc")
-    end
+                 :order => "created_at desc")    
   end
 
   def aboutus

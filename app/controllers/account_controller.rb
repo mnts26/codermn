@@ -10,8 +10,8 @@ class AccountController < ApplicationController
                           :set_user_school_name,
                           :set_user_self_intro]
 
-  ssl_required :signup, :login,
-               :change_password, :reset_password, :forgot_password
+  #ssl_required :signup, :login,
+  ssl_required  :change_password, :reset_password, :forgot_password
 
   def auto_complete_for_user_school_name
     @users = User.
@@ -61,13 +61,14 @@ class AccountController < ApplicationController
   end
 
   def ranking
-    behavior_cache Solution, Problem, User, :tag => (params[:page] || 1) do
+    #behavior_cache Solution, Problem, User, :tag => (params[:page] || 1) do
       @users = User.
         paginate_by_sql("SELECT u.login, u.id, u.school_name, "+
                         "count(s.percent) as solution_count, "+
                         "sum(p.point*s.percent) as points,  "+
-                        "avg(s.avg_time) as avg,  "+
-                        "date_format(max(s.created_at), '%y/%m/%d-%H:%i') as last_access,  "+
+                        "avg(s.avg_time) as avg,  "+                        
+                        "strftime('%y/%m/%d-%H:%i', max(s.created_at)) as last_access,  "+
+                        #{}"date_format(max(s.created_at), '%y/%m/%d-%H:%i') as last_access,  "+
                         "count(distinct(p.contest_id)) as contest_count  "+
                         "FROM users u  "+
                         "left join solutions s "+
@@ -79,7 +80,7 @@ class AccountController < ApplicationController
                         :page => params[:page], :per_page=>100,
                         :total_entries => User.count_by_sql('select count(*) from users where activation_code is null'))
       @total = Problem.sum('point', :conditions=> "contest_id is not null")
-    end
+    #end
   end
 
   def my
@@ -92,7 +93,7 @@ class AccountController < ApplicationController
   end
 
   def show
-    behavior_cache Solution, Problem, User => :id do
+    #behavior_cache Solution, Problem, User => :id do
     @total = Problem.sum('point', :conditions=> "contest_id is not null")
     @user = User.
       find_by_sql(["SELECT u.*, count(s.id) as solution_count, "+
@@ -154,7 +155,7 @@ class AccountController < ApplicationController
         end
       }
     end
-    end
+    #end
   end
 
   def activate

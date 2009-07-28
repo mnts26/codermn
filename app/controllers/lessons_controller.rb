@@ -14,13 +14,13 @@ class LessonsController < ApplicationController
          :redirect_to => { :action => :list }
 
   def list
-    behavior_cache Lesson, :tag=> (params[:page] || '1') do
+    #behavior_cache Lesson, :tag=> (params[:page] || '1') do
       @lessons = Lesson.
         paginate(:page=>params[:page],
                  :per_page => 5,
                  :include =>[:author],
                  :order => "created_at desc")
-    end
+    #end
   end
 
   def feed

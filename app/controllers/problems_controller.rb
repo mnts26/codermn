@@ -28,7 +28,7 @@ class ProblemsController < ApplicationController
     end
     page = params[:page] || '1'
     @order << page
-    behavior_cache Problem, Solution, :tag => @order  do
+    #behavior_cache Problem, Solution, :tag => @order  do
       @my_solutions = Solution.find_by_sql(["SELECT * from solutions WHERE correct=1 and user_id=?",current_user.id])
       @problems = Problem.
         paginate(:page => params[:page], :per_page => 30,
@@ -38,9 +38,9 @@ class ProblemsController < ApplicationController
              "left join users u on problems.user_id = u.id " +
              "left join solutions s on problems.id = s.problem_id ",
              :order => order_sql,
-             :conditions => ["c.start < NOW()"],
+             :conditions => ["c.start < date('now')"],
              :group => "problems.id")
-    end
+    #end
   end
 
   def feed
@@ -49,7 +49,7 @@ class ProblemsController < ApplicationController
                   "FROM problems p "+
                   "join contests c on p.contest_id = c.id "+
                   "join users u on p.user_id = u.id "+
-                  "where c.start < NOW() "+
+                  "where c.start < date('now') "+
                   "order by p.created_at desc "+
                   "limit 10")
     respond_to do |format|
@@ -60,10 +60,10 @@ class ProblemsController < ApplicationController
 
   def search
     conditions = case params['field']
-    when "name" then ["p.name LIKE ? AND c.start < NOW()", "%#{params[:query]}%"]
-    when "text" then ["p.text LIKE ? AND c.start < NOW()", "%#{params[:query]}%"]
-    when "type" then ["p.problem_type_id = ? AND c.start < NOW()", params[:query]]
-    else ["c.start < NOW()"]
+    when "name" then ["p.name LIKE ? AND c.start < date('now')", "%#{params[:query]}%"]
+    when "text" then ["p.text LIKE ? AND c.start < date('now')", "%#{params[:query]}%"]
+    when "type" then ["p.problem_type_id = ? AND c.start < date('now')", params[:query]]
+    else ["c.start < date('now')"]
     end
 
     @problems = Problem.
@@ -166,7 +166,7 @@ class ProblemsController < ApplicationController
   def pending_contests
     restrict_to 'Judge' do
       Contest.find(:all, :conditions =>
-                   ["end >= NOW()"]).collect {|c| [ c.name, c.id ] }
+                   ["end >= date('now')"]).collect {|c| [ c.name, c.id ] }
     end
   end
 
