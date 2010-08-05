@@ -361,24 +361,25 @@ module ApplicationHelper
   end
 
   def who_is_online
-    @whos_online = Array.new()
-    onlines = CGI::Session::ActiveRecordStore::Session.
-      find( :all,
-            :conditions => [ 'updated_at > ?',
-                             Time.now() - 20.minutes ])
-    onlines.each do |online|
-      id = online.data[:user]
-      @whos_online << id if id
-    end
-
-    if @whos_online.size > 0
-    @onlines = User.find(:all,
-                         :conditions => "id IN (#{@whos_online.join(',')})"
-                         )
-    render :partial => 'account/online'
-    else
-      render :text => 'No online users'
-    end
+  	
+#  	    @whos_online = Array.new()
+#    onlines = ActionController::Session::ActiveRecordStore::Session.
+#      find( :all,
+#            :conditions => [ 'updated_at > ?',
+#                             Time.now() - 20.minutes ])
+#    onlines.each do |online|
+#      id = online.data[:user]
+#      @whos_online << id if id
+#    end
+#
+#    if @whos_online.size > 0
+#    @onlines = User.find(:all,
+#                         :conditions => "id IN (#{@whos_online.join(',')})"
+#                         )
+#    render :partial => 'account/online'
+#    else
+#      render :text => 'No online users'
+#    end
   end
 
 end

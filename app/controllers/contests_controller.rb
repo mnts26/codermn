@@ -30,7 +30,7 @@ class ContestsController < ApplicationController
                   'join contest_types t on c.type_id = t.id ' +
                   'join prizes p on c.prize_id = p.id ' +
                   'join sponsors s on c.sponsor_id = s.id ' +
-                  'where c.end > NOW() ' +
+                  'where c.end > date("now") ' +
                   'order by c.start ASC')
     @title = 'Тэмцээнүүд'
   end
@@ -43,7 +43,7 @@ class ContestsController < ApplicationController
                   'join contest_types t on c.type_id = t.id ' +
                   'join prizes p on c.prize_id = p.id ' +
                   'join sponsors s on c.sponsor_id = s.id ' +
-                  'where c.end < NOW() ' +
+                  'where c.end < date("now") ' +
                   'order by c.start DESC')
     @title = 'Өнгөрсөн тэмцээнүүд'
     render :action => 'list'

@@ -22,16 +22,3 @@ ActionMailer::Base.sendmail_settings = {
   :arguments      => '-i -t'
 }
 
-memcache_options = {
-  :c_threshold => 10_000,
-  :compression => false,
-  :debug => false,
-  :readonly => false,
-  :urlencode => false,
-  :ttl => 300,
-  :namespace => 'coderdev',
-  :disabled => false
-}
-
-CACHE = MemCache.new memcache_options
-CACHE.servers = 'localhost:11211'
